@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Samuel's Shopswift - Modern E-Commerce Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a1a2e;
+            --primary-light: #2d2d4a;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --accent-soft: #e0e7ff;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --white: #ffffff;
+            --bg: #f8fafc;
+            --bg-card: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1);
+            --radius-sm: 8px;
+            --radius: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--bg); line-height: 1.6; overflow-x: hidden; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        .navbar { position: fixed; top: 0; left: 0; right: 0; background: rgba(255,255,255,0.92); backdrop-filter: blur(20px); z-index: 1000; border-bottom: 1px solid var(--border); }
+        .nav-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 70px; }
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+        .logo-icon { width: 36px; height: 36px; background: var(--accent); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem; }
+        .nav-search { flex: 1; max-width: 500px; margin: 0 2rem; position: relative; }
+        .nav-search input { width: 100%; padding: 0.7rem 1rem 0.7rem 2.8rem; border: 1.5px solid var(--border); border-radius: 50px; font-size: 0.9rem; background: var(--bg); transition: all 0.3s; }
+        .nav-search input:focus { outline: none; border-color: var(--accent); background: var(--white); box-shadow: 0 0 0 3px var(--accent-soft); }
+        .nav-search i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+        .nav-actions { display: flex; align-items: center; gap: 0.5rem; }
+        .nav-btn { position: relative; padding: 0.6rem 1rem; border-radius: var(--radius); border: none; background: transparent; color: var(--text); font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; transition: all 0.3s; text-decoration: none; }
+        .nav-btn:hover { background: var(--bg); color: var(--accent); }
+        .nav-btn .badge { position: absolute; top: 2px; right: 2px; background: var(--danger); color: white; font-size: 0.65rem; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+        .nav-btn-primary { background: var(--accent); color: white; padding: 0.6rem 1.2rem; border-radius: 50px; font-weight: 600; }
+        .nav-btn-primary:hover { background: var(--accent-hover); }
+        .hero { margin-top: 70px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, var(--accent) 150%); color: white; padding: 5rem 2rem; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: -50%; right: -10%; width: 600px; height: 600px; background: rgba(99,102,241,0.15); border-radius: 50%; filter: blur(60px); }
+        .hero-container { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; position: relative; z-index: 1; }
+        .hero-content h1 { font-family: 'Playfair Display', serif; font-size: 3.2rem; line-height: 1.15; margin-bottom: 1.2rem; }
+        .hero-content h1 span { color: #a5b4fc; }
+        .hero-content p { font-size: 1.15rem; opacity: 0.85; margin-bottom: 2rem; max-width: 500px; }
+        .hero-badges { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; }
+        .hero-badge { display: flex; align-items: center; gap: 0.4rem; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.85rem; border: 1px solid rgba(255,255,255,0.15); }
+        .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .btn { padding: 0.9rem 2rem; border-radius: 50px; font-size: 0.95rem; font-weight: 600; text-decoration: none; transition: all 0.3s; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 0.5rem; }
+        .btn-white { background: white; color: var(--primary); box-shadow: var(--shadow-lg); }
+        .btn-white:hover { transform: translateY(-2px); box-shadow: var(--shadow-xl); }
+        .btn-outline { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.3); }
+        .btn-outline:hover { background: rgba(255,255,255,0.1); border-color: white; }
+        .btn-accent { background: var(--accent); color: white; }
+        .btn-accent:hover { background: var(--accent-hover); transform: translateY(-2px); }
+        .btn-sm { padding: 0.6rem 1.2rem; font-size: 0.85rem; }
+        .hero-visual { position: relative; display: flex; justify-content: center; align-items: center; }
+        .hero-card { background: white; border-radius: var(--radius-xl); padding: 1.5rem; box-shadow: var(--shadow-xl); width: 280px; animation: float 6s ease-in-out infinite; }
+        .hero-card:nth-child(2) { position: absolute; right: 0; top: 20%; width: 220px; animation-delay: -3s; animation-duration: 7s; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        .hero-card-img { width: 100%; height: 160px; background: linear-gradient(135deg, #e0e7ff, #c7d2fe); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; font-size: 3rem; margin-bottom: 1rem; }
+        .hero-card h4 { color: var(--primary); font-size: 1rem; margin-bottom: 0.3rem; }
+        .hero-card p { color: var(--text-light); font-size: 0.8rem; }
+        .hero-card .price { color: var(--accent); font-weight: 700; font-size: 1.1rem; margin-top: 0.5rem; }
+        .section { max-width: 1400px; margin: 0 auto; padding: 4rem 2rem; }
+        .section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1rem; }
+        .section-title h2 { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--primary); margin-bottom: 0.3rem; }
+        .section-title p { color: var(--text-light); font-size: 0.95rem; }
+        .view-all { color: var(--accent); text-decoration: none; font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; gap: 0.3rem; }
+        .view-all:hover { gap: 0.6rem; }
+        .categories-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; }
+        .category-card { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem 1rem; text-align: center; cursor: pointer; transition: all 0.3s; text-decoration: none; color: var(--text); }
+        .category-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+        .category-icon { width: 56px; height: 56px; background: var(--accent-soft); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.8rem; font-size: 1.5rem; color: var(--accent); }
+        .category-card h4 { font-size: 0.9rem; font-weight: 600; }
+        .category-card span { font-size: 0.75rem; color: var(--text-muted); }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; }
+        .product-card { background: var(--bg-card); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border); transition: all 0.3s; cursor: pointer; position: relative; }
+        .product-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-xl); border-color: var(--accent-soft); }
+        .product-img-wrap { position: relative; height: 220px; overflow: hidden; background: linear-gradient(135deg, #f1f5f9, #e2e8f0); display: flex; align-items: center; justify-content: center; }
+        .product-badge { position: absolute; top: 12px; left: 12px; background: var(--danger); color: white; padding: 0.25rem 0.7rem; border-radius: 50px; font-size: 0.7rem; font-weight: 600; }
+        .product-badge.sale { background: var(--danger); }
+        .product-badge.new { background: var(--success); }
+        .product-badge.hot { background: var(--warning); }
+        .wishlist-btn { position: absolute; top: 12px; right: 12px; width: 36px; height: 36px; border-radius: 50%; background: white; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: var(--shadow); transition: all 0.3s; color: var(--text-light); }
+        .wishlist-btn:hover { background: var(--danger); color: white; }
+        .quick-add { position: absolute; bottom: -50px; left: 0; right: 0; padding: 0.8rem; background: var(--accent); color: white; text-align: center; font-weight: 600; font-size: 0.85rem; transition: bottom 0.3s; border: none; cursor: pointer; }
+        .product-card:hover .quick-add { bottom: 0; }
+        .product-info { padding: 1.2rem; }
+        .product-brand { font-size: 0.75rem; color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .product-name { font-size: 0.95rem; font-weight: 600; color: var(--primary); margin: 0.3rem 0; line-height: 1.4; }
+        .product-rating { display: flex; align-items: center; gap: 0.3rem; margin-bottom: 0.5rem; }
+        .product-rating .stars { color: #fbbf24; font-size: 0.8rem; }
+        .product-rating span { font-size: 0.75rem; color: var(--text-muted); }
+        .product-price { display: flex; align-items: center; gap: 0.6rem; }
+        .current-price { font-size: 1.1rem; font-weight: 700; color: var(--primary); }
+        .old-price { font-size: 0.85rem; color: var(--text-muted); text-decoration: line-through; }
+        .features-banner { background: linear-gradient(135deg, var(--accent-soft), #ede9fe); border-radius: var(--radius-xl); padding: 3rem 2rem; margin: 2rem auto; max-width: 1400px; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; }
+        .feature-item { display: flex; align-items: flex-start; gap: 1rem; }
+        .feature-icon { width: 48px; height: 48px; background: white; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 1.2rem; box-shadow: var(--shadow-sm); flex-shrink: 0; }
+        .feature-item h4 { font-size: 0.95rem; margin-bottom: 0.2rem; }
+        .feature-item p { font-size: 0.8rem; color: var(--text-light); }
+        .deals-section { background: var(--primary); color: white; padding: 4rem 2rem; margin: 4rem 0; position: relative; overflow: hidden; }
+        .deals-section::before { content: ''; position: absolute; top: -100px; right: -100px; width: 400px; height: 400px; background: rgba(99,102,241,0.2); border-radius: 50%; filter: blur(80px); }
+        .deals-container { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr 2fr; gap: 4rem; align-items: center; position: relative; z-index: 1; }
+        .deals-info h2 { font-family: 'Playfair Display', serif; font-size: 2.5rem; margin-bottom: 1rem; }
+        .deals-info p { opacity: 0.8; margin-bottom: 1.5rem; }
+        .countdown { display: flex; gap: 1rem; margin-bottom: 2rem; }
+        .countdown-item { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 1rem 1.2rem; border-radius: var(--radius); text-align: center; border: 1px solid rgba(255,255,255,0.15); }
+        .countdown-item .num { font-size: 1.8rem; font-weight: 700; display: block; }
+        .countdown-item .label { font-size: 0.75rem; opacity: 0.7; text-transform: uppercase; }
+        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
+        .testimonial-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; transition: all 0.3s; }
+        .testimonial-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+        .testimonial-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .testimonial-avatar { width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), #8b5cf6); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.1rem; }
+        .testimonial-meta h4 { font-size: 0.95rem; }
+        .testimonial-meta .stars { color: #fbbf24; font-size: 0.8rem; }
+        .testimonial-text { color: var(--text-light); font-size: 0.9rem; line-height: 1.7; }
+        .newsletter { background: linear-gradient(135deg, var(--primary), var(--primary-light)); border-radius: var(--radius-xl); padding: 4rem 2rem; text-align: center; color: white; margin: 4rem auto; max-width: 1400px; position: relative; overflow: hidden; }
+        .newsletter::before { content: ''; position: absolute; bottom: -100px; left: -100px; width: 300px; height: 300px; background: rgba(99,102,241,0.2); border-radius: 50%; filter: blur(60px); }
+        .newsletter h2 { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 0.5rem; position: relative; }
+        .newsletter p { opacity: 0.8; margin-bottom: 2rem; position: relative; }
+        .newsletter-form { display: flex; gap: 0.8rem; max-width: 500px; margin: 0 auto; position: relative; }
+        .newsletter-form input { flex: 1; padding: 1rem 1.5rem; border-radius: 50px; border: none; font-size: 0.95rem; }
+        .newsletter-form input:focus { outline: none; box-shadow: 0 0 0 3px rgba(99,102,241,0.3); }
+        .footer { background: var(--primary); color: white; padding: 4rem 2rem 2rem; }
+        .footer-grid { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+        .footer-brand .logo { color: white; margin-bottom: 1rem; display: inline-block; }
+        .footer-brand p { color: rgba(255,255,255,0.6); font-size: 0.9rem; line-height: 1.7; margin-bottom: 1.5rem; }
+        .footer-social { display: flex; gap: 0.8rem; }
+        .footer-social a { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: all 0.3s; }
+        .footer-social a:hover { background: var(--accent); transform: translateY(-3px); }
+        .footer-col h4 { font-size: 0.95rem; margin-bottom: 1.2rem; color: white; }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 0.7rem; }
+        .footer-col ul li a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.85rem; transition: color 0.3s; }
+        .footer-col ul li a:hover { color: var(--accent); }
+        .footer-bottom { max-width: 1400px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .footer-bottom p { color: rgba(255,255,255,0.4); font-size: 0.85rem; }
+        .payment-methods { display: flex; gap: 0.8rem; align-items: center; }
+        .payment-methods i { font-size: 1.5rem; color: rgba(255,255,255,0.4); }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 2rem; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: white; border-radius: var(--radius-xl); max-width: 900px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; animation: modalIn 0.3s ease; }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .modal-close { position: absolute; top: 1rem; right: 1rem; width: 40px; height: 40px; border-radius: 50%; background: var(--bg); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2rem; color: var(--text); z-index: 10; }
+        .modal-close:hover { background: var(--border); }
+        .modal-body { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+        .modal-gallery { padding: 2rem; background: var(--bg); }
+        .modal-main-img { width: 100%; height: 350px; background: linear-gradient(135deg, #e0e7ff, #c7d2fe); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; font-size: 5rem; margin-bottom: 1rem; }
+        .modal-thumbs { display: flex; gap: 0.5rem; }
+        .modal-thumb { width: 70px; height: 70px; background: white; border-radius: var(--radius-sm); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; transition: all 0.3s; }
+        .modal-thumb:hover, .modal-thumb.active { border-color: var(--accent); }
+        .modal-info { padding: 2rem; }
+        .modal-info .product-brand { margin-bottom: 0.5rem; }
+        .modal-info h2 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .modal-rating { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+        .modal-rating .stars { color: #fbbf24; }
+        .modal-rating span { color: var(--text-muted); font-size: 0.85rem; }
+        .modal-price { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.5rem; }
+        .modal-price .current { font-size: 2rem; font-weight: 700; color: var(--primary); }
+        .modal-price .old { font-size: 1.2rem; color: var(--text-muted); text-decoration: line-through; }
+        .modal-price .save { background: var(--success); color: white; padding: 0.2rem 0.6rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
+        .modal-desc { color: var(--text-light); margin-bottom: 1.5rem; line-height: 1.7; }
+        .modal-options { margin-bottom: 1.5rem; }
+        .modal-options label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .option-btns { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .option-btn { padding: 0.5rem 1rem; border: 1.5px solid var(--border); border-radius: var(--radius-sm); background: white; cursor: pointer; font-size: 0.85rem; transition: all 0.3s; }
+        .option-btn:hover, .option-btn.active { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+        .qty-selector { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; }
+        .qty-btn { width: 40px; height: 40px; border-radius: var(--radius-sm); border: 1.5px solid var(--border); background: white; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
+        .qty-btn:hover { border-color: var(--accent); }
+        .qty-value { font-weight: 600; min-width: 30px; text-align: center; }
+        .modal-actions { display: flex; gap: 1rem; }
+        .modal-actions .btn { flex: 1; justify-content: center; }
+        .cart-sidebar { position: fixed; top: 0; right: -420px; width: 400px; max-width: 100%; height: 100vh; background: white; z-index: 2000; box-shadow: -10px 0 40px rgba(0,0,0,0.15); transition: right 0.4s ease; display: flex; flex-direction: column; }
+        .cart-sidebar.open { right: 0; }
+        .cart-header { padding: 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .cart-header h3 { font-size: 1.2rem; }
+        .cart-close { width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--bg); cursor: pointer; font-size: 1.1rem; }
+        .cart-items { flex: 1; overflow-y: auto; padding: 1rem; }
+        .cart-item { display: flex; gap: 1rem; padding: 1rem; border-radius: var(--radius); background: var(--bg); margin-bottom: 0.8rem; }
+        .cart-item-img { width: 70px; height: 70px; background: linear-gradient(135deg, #e0e7ff, #c7d2fe); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; }
+        .cart-item-info { flex: 1; }
+        .cart-item-info h4 { font-size: 0.9rem; margin-bottom: 0.2rem; }
+        .cart-item-info p { font-size: 0.8rem; color: var(--text-muted); }
+        .cart-item-price { font-weight: 700; color: var(--accent); }
+        .cart-footer { padding: 1.5rem; border-top: 1px solid var(--border); background: var(--bg); }
+        .cart-subtotal { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+        .cart-total { display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; padding-top: 0.5rem; border-top: 1px dashed var(--border); }
+        .cart-footer .btn { width: 100%; justify-content: center; margin-bottom: 0.5rem; }
+        .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--primary); color: white; padding: 1rem 2rem; border-radius: 50px; font-weight: 500; z-index: 3000; opacity: 0; transition: all 0.4s ease; display: flex; align-items: center; gap: 0.5rem; box-shadow: var(--shadow-xl); }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .animate { opacity: 0; animation: fadeInUp 0.7s ease forwards; }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        @media (max-width: 1024px) {
+            .hero-container { grid-template-columns: 1fr; text-align: center; }
+            .hero-content p { margin: 0 auto 2rem; }
+            .hero-cta { justify-content: center; }
+            .hero-visual { display: none; }
+            .deals-container { grid-template-columns: 1fr; text-align: center; }
+            .countdown { justify-content: center; }
+            .modal-body { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 768px) {
+            .nav-search { display: none; }
+            .hero-content h1 { font-size: 2rem; }
+            .section-header { flex-direction: column; align-items: flex-start; }
+            .features-grid { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .cart-sidebar { width: 100%; }
+            .newsletter-form { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== NAVIGATION ===== -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <div class="logo-icon"><i class="fas fa-bolt"></i></div>
+                Samuel's Shopswift
+            </a>
+            <div class="nav-search">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search products, brands, categories...">
+            </div>
+            <div class="nav-actions">
+                <a href="#" class="nav-btn" onclick="toggleCart(); return false;">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Cart</span>
+                    <span class="badge" id="cartCount">3</span>
+                </a>
+                <a href="#" class="nav-btn">
+                    <i class="fas fa-heart"></i>
+                    <span class="badge">5</span>
+                </a>
+                <a href="#" class="nav-btn">
+                    <i class="fas fa-user"></i>
+                    <span>Account</span>
+                </a>
+                <a href="#" class="nav-btn nav-btn-primary">
+                    <i class="fas fa-store"></i>
+                    <span>Sell</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content animate">
+                <div class="hero-badges">
+                    <div class="hero-badge"><i class="fas fa-shipping-fast"></i> Free Delivery</div>
+                    <div class="hero-badge"><i class="fas fa-shield-alt"></i> Secure Payments</div>
+                    <div class="hero-badge"><i class="fas fa-undo"></i> Easy Returns</div>
+                </div>
+                <h1>Shop Smarter, <span>Live Better</span></h1>
+                <p>Discover millions of products at unbeatable prices. From fashion to electronics, home essentials to beauty - everything you need, delivered to your door.</p>
+                <div class="hero-cta">
+                    <a href="#products" class="btn btn-white"><i class="fas fa-compass"></i> Explore Now</a>
+                    <a href="#deals" class="btn btn-outline"><i class="fas fa-percent"></i> View Deals</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-card">
+                    <div class="hero-card-img">👟</div>
+                    <h4>Premium Sneakers</h4>
+                    <p>Latest collection</p>
+                    <div class="price">N45,000</div>
+                </div>
+                <div class="hero-card">
+                    <div class="hero-card-img">🎧</div>
+                    <h4>Wireless Headphones</h4>
+                    <p>Noise cancelling</p>
+                    <div class="price">N78,000</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CATEGORIES ===== -->
+    <section class="section">
+        <div class="section-header animate">
+            <div class="section-title">
+                <h2>Shop by Category</h2>
+                <p>Browse our wide selection of categories</p>
+            </div>
+            <a href="#" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="categories-grid">
+            <a href="#" class="category-card animate delay-1">
+                <div class="category-icon"><i class="fas fa-tshirt"></i></div>
+                <h4>Fashion</h4><span>2,400+ items</span>
+            </a>
+            <a href="#" class="category-card animate delay-1">
+                <div class="category-icon"><i class="fas fa-mobile-alt"></i></div>
+                <h4>Electronics</h4><span>1,800+ items</span>
+            </a>
+            <a href="#" class="category-card animate delay-2">
+                <div class="category-icon"><i class="fas fa-couch"></i></div>
+                <h4>Home & Living</h4><span>3,200+ items</span>
+            </a>
+            <a href="#" class="category-card animate delay-2">
+                <div class="category-icon"><i class="fas fa-spa"></i></div>
+                <h4>Beauty</h4><span>1,500+ items</span>
+            </a>
+            <a href="#" class="category-card animate delay-3">
+                <div class="category-icon"><i class="fas fa-dumbbell"></i></div>
+                <h4>Sports</h4><span>900+ items</span>
+            </a>
+            <a href="#" class="category-card animate delay-3">
+                <div class="category-icon"><i class="fas fa-baby"></i></div>
+                <h4>Kids</h4><span>1,100+ items</span>
+            </a>
+            <a href="#" class="category-card animate">
+                <div class="category-icon"><i class="fas fa-laptop"></i></div>
+                <h4>Computers</h4><span>750+ items</span>
+            </a>
+            <a href="#" class="category-card animate">
+                <div class="category-icon"><i class="fas fa-utensils"></i></div>
+                <h4>Kitchen</h4><span>1,300+ items</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- ===== FEATURES BANNER ===== -->
+    <div class="features-banner animate">
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon"><i class="fas fa-truck"></i></div>
+                <div><h4>Fast Delivery</h4><p>Same-day delivery in Lagos</p></div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                <div><h4>Secure Payment</h4><p>100% secure checkout</p></div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon"><i class="fas fa-undo"></i></div>
+                <div><h4>Easy Returns</h4><p>7-day return policy</p></div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon"><i class="fas fa-headset"></i></div>
+                <div><h4>24/7 Support</h4><p>Always here to help</p></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TRENDING PRODUCTS ===== -->
+    <section class="section" id="products">
+        <div class="section-header animate">
+            <div class="section-title">
+                <h2>Trending Now</h2>
+                <p>Most popular products this week</p>
+            </div>
+            <a href="#" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="products-grid">
+            <div class="product-card animate delay-1" onclick="openProductModal('Wireless Noise-Cancelling Headphones', 'N78,000', 'N95,000', 'Sony', 4.8, 234)">
+                <div class="product-img-wrap">
+                    <span style="font-size:4rem;">🎧</span>
+                    <span class="product-badge sale">-18%</span>
+                    <button class="wishlist-btn"><i class="fas fa-heart"></i></button>
+                    <button class="quick-add" onclick="event.stopPropagation(); addToCart('Wireless Headphones', 78000)"><i class="fas fa-cart-plus"></i> Add to Cart</button>
+                </div>
+                <div class="product-info">
+                    <div class="product-brand">Sony</div>
+                    <div class="product-name">Wireless Noise-Cancelling Headphones</div>
+                    <div class="product-rating">
+                        <span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></span>
+                        <span>(234)</span>
+                    </div>
+                    <div class="product-price">
+                        <span class="current-price">N78,000</span>
+                        <span class="old-price">N95,000</span>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card animate delay-2" onclick="openProductModal('Smart Fitness Watch Pro', 'N52,000', 'N65,000', 'FitTech', 4.6, 189)">
+                <div class="product-img-wrap">
+                    <span style="font-size:4rem;">⌚</span>
+                    <span class="product-badge new">NEW</span>
+                    <button class="wishlist-btn"><i class="fas fa-heart"></i></button>
+                    <button class="quick-add" onclick="event.stopPropagation(); addToCart('Smart Fitness Watch', 52000)"><i class="fas fa-cart-plus"></i> Add to Cart</button>
+                </div>
+                <div class="product-info">
+                    <div class="product-brand">FitTech</div>
+                    <div class="product-name">Smart Fitness Watch Pro</div>
+                    <div class="product-rating">
+                        <span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></span>
+                        <span>(189)</span>
+                    </div>
+                    <div class="product-price">
+                        <span class="current-price">N52,000</span>
+                        <span class="old-price">N65,000</span>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card animate delay-3" onclick="openProductModal('Premium Leather Handbag', 'N35,000', null, 'LuxeBag', 4.9, 412)">
+                <div class="product-img-wrap">
+                    <span style="font-size:4rem;">👜</span>
+                    <span class="product-badge hot">HOT</span>
+                    <button class="wishlist-btn"><i class="fas fa-heart"></i></button>
+                    <button class="quick-add" onclick="event.stopPropagation(); addToCart('Leather Handbag', 35000)"><i class="fas fa-cart-plus"></i> Add to Cart</button>
+                </div>
+                <div class="product-info">
+                    <div class="product-brand">LuxeBag</div>
+                    <div class="product-name">Premium Leather Handbag</div>
+                    <div class="product-rating">
+                        <span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span>
+                        <span>(412)</span>
+                    </div>
+                    <div class="product-price"><span class="current-price">N35,000</span></div>
+                </div>
+            </div>
+            <div class="product-card animate" onclick="openProductModal('4K Smart TV 55 inch', 'N285,000', 'N320,000', 'Samsung', 4.7, 156)">
+                <div class="product-img-wrap">
+                    <span style="font-size:4rem;">📺</span>
+                    <span class="product-badge sale">-11%</span>
+                    <button class="wishlist-btn"><i class="fas fa-heart"></i></button>
+                    <button class="quick-add" onclick="event.stopPropagation(); addToCart('4K Smart TV', 285000)"><i class="fas fa-cart-plus"></i> Add to Cart</button>
+                </div>
+                <div class="product-info">
+                    <div class="product-brand">Samsung</div>
+                    <div class="product-name">4K Smart TV 55 inch</div>
+                    <div class="product-rating">
+                        <span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></span>
+                        <span>(156)</span>
+                    </div>
+                    <div class="product-price">
+                        <span class="current-price">N285,000</span>
+                        <span class="old-price">N320,000</span>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card animate delay-1" onclick="openProductModal('Running Shoes Ultra Boost', 'N42,000', null, 'Nike', 4.5, 298)">
+                <div class="product-img-wrap">
+                    <span style="font-size:4rem;">👟</span>
+                    <button class="wishlist-btn"><i class="fas fa-heart"></i></button>
+                    <button class="quick-add" onclick="event.stopPropagation(); addToCart('Running Shoes', 42000)"><i class="fas fa-cart-plus"></i> Add to Cart</button>
+                </div>
+                <div class="product-info">
+                    <div class="product-brand">Nike</div>
+                    <div class="product-name">Running Shoes Ultra Boost</div>
+                    <div class="product-rating">
+                        <span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></span>
+                        <span>(298)</span>
+                    </div>
+                    <div class="product-price"><span class="current-price">N42,000</span></div>
+                </div>
+            </div>
+            <div class="product-card animate delay-2" onclick="openProductModal('Portable Bluetooth Speaker', 'N18,500', 'N25,000', 'JBL', 4.4, 567)">
+                <div class="product-img-wrap">
+                    <span style="font-size:4rem;">🔊</span>
+                    <span class="product-badge sale">-26%</span>
+                    <button class="wishlist-btn"><i class="fas fa-heart"></i></button>
+                    <button class="quick-add" onclick="event.stopPropagation(); addToCart('Bluetooth Speaker', 18500)"><i class="fas fa-cart-plus"></i> Add to Cart</button>
+                </div>
+                <div class="product-info">
+                    <div class="product-brand">JBL</div>
+                    <div class="product-name">Portable Bluetooth Speaker</div>
+                    <div class="product-rating">
+                        <span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></span>
+                        <span>(567)</span>
+                    </div>
+                    <div class="product-price">
+                        <span class="current-price">N18,500</span>
+                        <span class="old-price">N25,000</span>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card animate delay-3" onclick="openProductModal('Organic Skincare Set', 'N28,000', null, 'GlowUp', 4.8, 203)">
+                <div class="product-img-wrap">
+                    <span style="font-size:4rem;">🧴</span>
+                    <span class="product-badge new">NEW</span>
+                    <button class="wishlist-btn"><i class="fas fa-heart"></i></button>
+                    <button class="quick-add" onclick="event.stopPropagation(); addToCart('Skincare Set', 28000)"><i class="fas fa-cart-plus"></i> Add to Cart</button>
+                </div>
+                <div class="product-info">
+                    <div class="product-brand">GlowUp</div>
+                    <div class="product-name">Organic Skincare Set</div>
+                    <div class="product-rating">
+                        <span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></span>
+                        <span>(203)</span>
+                    </div>
+                    <div class="product-price"><span class="current-price">N28,000</span></div>
+                </div>
+            </div>
+            <div class="product-card animate" onclick="openProductModal('Gaming Laptop RTX 4060', 'N650,000', 'N720,000', 'ASUS', 4.6, 89)">
+                <div class="product-img-wrap">
+                    <span style="font-size:4rem;">💻</span>
+                    <span class="product-badge sale">-10%</span>
+                    <button class="wishlist-btn"><i class="fas fa-heart"></i></button>
+                    <button class="quick-add" onclick="event.stopPropagation(); addToCart('Gaming Laptop', 650000)"><i class="fas fa-cart-plus"></i> Add to Cart</button>
+                </div>
+                <div class="product-info">
+                    <div class="product-brand">ASUS</div>
+                    <div class="product-name">Gaming Laptop RTX 4060</div>
+                    <div class="product-rating">
+                        <span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></span>
+                        <span>(89)</span>
+                    </div>
+                    <div class="product-price">
+                        <span class="current-price">N650,000</span>
+                        <span class="old-price">N720,000</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FLASH DEALS ===== -->
+    <section class="deals-section" id="deals">
+        <div class="deals-container">
+            <div class="deals-info animate">
+                <h2>Flash Deals</h2>
+                <p>Grab these limited-time offers before they are gone. Up to 50% off on selected items.</p>
+                <div class="countdown">
+                    <div class="countdown-item"><span class="num" id="hours">04</span><span class="label">Hours</span></div>
+                    <div class="countdown-item"><span class="num" id="minutes">32</span><span class="label">Mins</span></div>
+                    <div class="countdown-item"><span class="num" id="seconds">18</span><span class="label">Secs</span></div>
+                </div>
+                <a href="#" class="btn btn-white"><i class="fas fa-fire"></i> Shop All Deals</a>
+            </div>
+            <div class="products-grid" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr));">
+                <div class="product-card animate delay-1">
+                    <div class="product-img-wrap" style="height:180px;">
+                        <span style="font-size:3rem;">📱</span>
+                        <span class="product-badge sale">-30%</span>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-brand">Apple</div>
+                        <div class="product-name" style="font-size:0.85rem;">iPhone 15 Pro</div>
+                        <div class="product-price">
+                            <span class="current-price" style="font-size:0.95rem;">N980,000</span>
+                            <span class="old-price" style="font-size:0.75rem;">N1,400,000</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card animate delay-2">
+                    <div class="product-img-wrap" style="height:180px;">
+                        <span style="font-size:3rem;">🎮</span>
+                        <span class="product-badge sale">-25%</span>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-brand">Sony</div>
+                        <div class="product-name" style="font-size:0.85rem;">PS5 Console</div>
+                        <div class="product-price">
+                            <span class="current-price" style="font-size:0.95rem;">N450,000</span>
+                            <span class="old-price" style="font-size:0.75rem;">N600,000</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card animate delay-3">
+                    <div class="product-img-wrap" style="height:180px;">
+                        <span style="font-size:3rem;">🏠</span>
+                        <span class="product-badge sale">-40%</span>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-brand">Dyson</div>
+                        <div class="product-name" style="font-size:0.85rem;">Air Purifier</div>
+                        <div class="product-price">
+                            <span class="current-price" style="font-size:0.95rem;">N180,000</span>
+                            <span class="old-price" style="font-size:0.75rem;">N300,000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== RECOMMENDED ===== -->
+    <section class="section">
+        <div class="section-header animate">
+            <div class="section-title">
+                <h2>Recommended For You</h2>
+                <p>Based on your browsing history</p>
+            </div>
+            <a href="#" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="products-grid">
+            <div class="product-card animate delay-1">
+                <div class="product-img-wrap">
+                    <span style="font-size:4rem;">☕</span>
+                    <button class="wishlist-btn"><i class="fas fa-heart"></i></button>
+                </div>
+                <div class="product-info">
+                    <div class="product-brand">Breville</div>
+                    <div class="product-name">Espresso Coffee Machine</div>
+                    <div class="product-rating">
+                        <span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span>
+                        <span>(89)</span>
+                    </div>
+                    <div class="product-price"><span class="current-price">N125,000</span></div>
+                </div>
+            </div>
+            <div class="product-card animate delay-2">
+                <div class="product-img-wrap">
+                    <span style="font-size:4rem;">🧳</span>
+                    <button class="wishlist-btn"><i class="fas fa-heart"></i></button>
+                </div>
+                <div class="product-info">
+                    <div class="product-brand">Samsonite</div>
+                    <div class="product-name">Hard Shell Luggage Set</div>
+                    <div class="product-rating">
+                        <span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></span>
+                        <span>(134)</span>
+                    </div>
+                    <div class="product-price"><span class="current-price">N85,000</span></div>
+                </div>
+            </div>
+            <div class="product-card animate delay-3">
+                <div class="product-img-wrap">
+                    <span style="font-size:4rem;">🌱</span>
+                    <button class="wishlist-btn"><i class="fas fa-heart"></i></button>
+                </div>
+                <div class="product-info">
+                    <div class="product-brand">The Ordinary</div>
+                    <div class="product-name">Serum Collection Bundle</div>
+                    <div class="product-rating">
+                        <span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span>
+                        <span>(312)</span>
+                    </div>
+                    <div class="product-price"><span class="current-price">N22,000</span></div>
+                </div>
+            </div>
+            <div class="product-card animate">
+                <div class="product-img-wrap">
+                    <span style="font-size:4rem;">🎒</span>
+                    <button class="wishlist-btn"><i class="fas fa-heart"></i></button>
+                </div>
+                <div class="product-info">
+                    <div class="product-brand">Herschel</div>
+                    <div class="product-name">Classic Backpack</div>
+                    <div class="product-rating">
+                        <span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></span>
+                        <span>(256)</span>
+                    </div>
+                    <div class="product-price"><span class="current-price">N32,000</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== TESTIMONIALS ===== -->
+    <section class="section">
+        <div class="section-header animate">
+            <div class="section-title">
+                <h2>What Our Customers Say</h2>
+                <p>Trusted by thousands of happy shoppers</p>
+            </div>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card animate delay-1">
+                <div class="testimonial-header">
+                    <div class="testimonial-avatar">AO</div>
+                    <div class="testimonial-meta">
+                        <h4>Adeola O.</h4>
+                        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    </div>
+                </div>
+                <p class="testimonial-text">"Samuel's Shopswift has completely changed how I shop. The price comparison feature saved me thousands on electronics. Delivery is always fast and the app is so easy to use!"</p>
+            </div>
+            <div class="testimonial-card animate delay-2">
+                <div class="testimonial-header">
+                    <div class="testimonial-avatar">CN</div>
+                    <div class="testimonial-meta">
+                        <h4>Chinedu N.</h4>
+                        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    </div>
+                </div>
+                <p class="testimonial-text">"As a small business owner, Samuel's Shopswift helped me reach customers I never could before. The seller dashboard is intuitive and sales have increased by 300% since I joined."</p>
+            </div>
+            <div class="testimonial-card animate delay-3">
+                <div class="testimonial-header">
+                    <div class="testimonial-avatar">FA</div>
+                    <div class="testimonial-meta">
+                        <h4>Fatima A.</h4>
+                        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
+                    </div>
+                </div>
+                <p class="testimonial-text">"I love the personalized recommendations! It feels like the platform knows exactly what I need. The checkout process is seamless and customer support is incredibly responsive."</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== NEWSLETTER ===== -->
+    <section class="newsletter">
+        <h2>Stay in the Loop</h2>
+        <p>Subscribe for exclusive deals, new arrivals, and shopping tips delivered to your inbox.</p>
+        <div class="newsletter-form">
+            <input type="email" placeholder="Enter your email address">
+            <button class="btn btn-accent">Subscribe</button>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <a href="#" class="logo">
+                    <div class="logo-icon"><i class="fas fa-bolt"></i></div>
+                    Samuel's Shopswift
+                </a>
+                <p>Your one-stop destination for everything you need. We connect buyers and sellers across Nigeria with a seamless, secure, and enjoyable shopping experience.</p>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Shop</h4>
+                <ul>
+                    <li><a href="#">New Arrivals</a></li>
+                    <li><a href="#">Best Sellers</a></li>
+                    <li><a href="#">Flash Deals</a></li>
+                    <li><a href="#">Categories</a></li>
+                    <li><a href="#">Brands</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Track Order</a></li>
+                    <li><a href="#">Returns & Refunds</a></li>
+                    <li><a href="#">Shipping Info</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Press</a></li>
+                    <li><a href="#">Sell on Samuel's Shopswift</a></li>
+                    <li><a href="#">Affiliate Program</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                    <li><a href="#">Security</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 Samuel's Shopswift. All rights reserved.</p>
+            <div class="payment-methods">
+                <i class="fab fa-cc-visa"></i>
+                <i class="fab fa-cc-mastercard"></i>
+                <i class="fab fa-cc-paypal"></i>
+                <i class="fab fa-cc-amex"></i>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== PRODUCT MODAL ===== -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            <div class="modal-body">
+                <div class="modal-gallery">
+                    <div class="modal-main-img" id="modalImg">🎧</div>
+                    <div class="modal-thumbs">
+                        <div class="modal-thumb active">🎧</div>
+                        <div class="modal-thumb">🎧</div>
+                        <div class="modal-thumb">🎧</div>
+                        <div class="modal-thumb">🎧</div>
+                    </div>
+                </div>
+                <div class="modal-info">
+                    <div class="product-brand" id="modalBrand">Sony</div>
+                    <h2 id="modalTitle">Wireless Noise-Cancelling Headphones</h2>
+                    <div class="modal-rating">
+                        <span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></span>
+                        <span id="modalReviews">(234 reviews)</span>
+                    </div>
+                    <div class="modal-price">
+                        <span class="current" id="modalPrice">N78,000</span>
+                        <span class="old" id="modalOldPrice">N95,000</span>
+                        <span class="save" id="modalSave">Save 18%</span>
+                    </div>
+                    <p class="modal-desc">Experience premium sound quality with industry-leading noise cancellation. 30-hour battery life, comfortable over-ear design, and crystal-clear calls. Perfect for work, travel, and everyday listening.</p>
+                    <div class="modal-options">
+                        <label>Color</label>
+                        <div class="option-btns">
+                            <button class="option-btn active">Black</button>
+                            <button class="option-btn">Silver</button>
+                            <button class="option-btn">Blue</button>
+                        </div>
+                    </div>
+                    <div class="qty-selector">
+                        <label style="font-weight:600;margin-right:1rem;">Quantity</label>
+                        <button class="qty-btn" onclick="changeQty(-1)">-</button>
+                        <span class="qty-value" id="qtyValue">1</span>
+                        <button class="qty-btn" onclick="changeQty(1)">+</button>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn btn-accent" onclick="addToCartFromModal()"><i class="fas fa-cart-plus"></i> Add to Cart</button>
+                        <button class="btn btn-outline" style="border-color:var(--border);color:var(--text);"><i class="fas fa-heart"></i> Wishlist</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== CART SIDEBAR ===== -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3><i class="fas fa-shopping-cart"></i> Your Cart (3)</h3>
+            <button class="cart-close" onclick="toggleCart()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="cart-items">
+            <div class="cart-item">
+                <div class="cart-item-img">🎧</div>
+                <div class="cart-item-info">
+                    <h4>Wireless Headphones</h4>
+                    <p>Black | Qty: 1</p>
+                    <div class="cart-item-price">N78,000</div>
+                </div>
+            </div>
+            <div class="cart-item">
+                <div class="cart-item-img">👟</div>
+                <div class="cart-item-info">
+                    <h4>Running Shoes</h4>
+                    <p>Size 42 | Qty: 1</p>
+                    <div class="cart-item-price">N42,000</div>
+                </div>
+            </div>
+            <div class="cart-item">
+                <div class="cart-item-img">🧴</div>
+                <div class="cart-item-info">
+                    <h4>Skincare Set</h4>
+                    <p>Bundle | Qty: 1</p>
+                    <div class="cart-item-price">N28,000</div>
+                </div>
+            </div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-subtotal"><span>Subtotal</span><span>N148,000</span></div>
+            <div class="cart-subtotal"><span>Shipping</span><span>Free</span></div>
+            <div class="cart-total"><span>Total</span><span>N148,000</span></div>
+            <button class="btn btn-accent"><i class="fas fa-lock"></i> Checkout Securely</button>
+            <button class="btn btn-outline" style="width:100%;justify-content:center;border-color:var(--border);color:var(--text);"><i class="fas fa-shopping-bag"></i> Continue Shopping</button>
+        </div>
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast" id="toast"><i class="fas fa-check-circle"></i> <span id="toastMsg">Added to cart!</span></div>
+
+    <script>
+        // Cart toggle
+        function toggleCart() {
+            document.getElementById('cartSidebar').classList.toggle('open');
+        }
+
+        // Modal functions
+        let currentModalProduct = {};
+        function openProductModal(name, price, oldPrice, brand, rating, reviews) {
+            currentModalProduct = { name, price, oldPrice, brand };
+            document.getElementById('modalTitle').textContent = name;
+            document.getElementById('modalPrice').textContent = price;
+            document.getElementById('modalBrand').textContent = brand;
+            document.getElementById('modalReviews').textContent = '(' + reviews + ' reviews)';
+            const oldEl = document.getElementById('modalOldPrice');
+            const saveEl = document.getElementById('modalSave');
+            if (oldPrice) {
+                oldEl.textContent = oldPrice;
+                oldEl.style.display = 'inline';
+                const discount = Math.round((parseInt(oldPrice.replace(/\D/g,'')) - parseInt(price.replace(/\D/g,''))) / parseInt(oldPrice.replace(/\D/g,'')) * 100);
+                saveEl.textContent = 'Save ' + discount + '%';
+                saveEl.style.display = 'inline';
+            } else {
+                oldEl.style.display = 'none';
+                saveEl.style.display = 'none';
+            }
+            document.getElementById('productModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeModal() {
+            document.getElementById('productModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        document.getElementById('productModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Quantity
+        let qty = 1;
+        function changeQty(delta) {
+            qty = Math.max(1, qty + delta);
+            document.getElementById('qtyValue').textContent = qty;
+        }
+
+        // Add to cart
+        function addToCart(productName, price) {
+            showToast(productName + ' added to cart!');
+            const count = document.getElementById('cartCount');
+            count.textContent = parseInt(count.textContent) + 1;
+        }
+        function addToCartFromModal() {
+            showToast(currentModalProduct.name + ' added to cart!');
+            const count = document.getElementById('cartCount');
+            count.textContent = parseInt(count.textContent) + qty;
+            closeModal();
+        }
+
+        // Toast
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Countdown timer
+        function updateCountdown() {
+            const now = new Date();
+            const end = new Date();
+            end.setHours(23, 59, 59);
+            let diff = end - now;
+            if (diff < 0) diff = 0;
+            const h = Math.floor(diff / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+            document.getElementById('hours').textContent = String(h).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(m).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(s).padStart(2, '0');
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.animate').forEach(el => observer.observe(el));
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                nav.style.boxShadow = '0 4px 20px rgba(0,0,0,0.08)';
+            } else {
+                nav.style.boxShadow = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
